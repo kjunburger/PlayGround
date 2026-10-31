@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#08080d" />
+<meta name="description" content="젠존제 캐릭터로 즐기는 오토배틀러 — ZERO//CHESS 제로 오토체스" />
+<title>ZERO//CHESS — 제로 오토체스</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23d8ff3e'/%3E%3Cpath d='M8 9h16l-10 7h10l-16 8 10-8H8z' fill='%2308080d'/%3E%3C/svg%3E" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ================= TITLE ================= -->
+  <section id="title-screen" class="title-screen">
+    <div class="title-grid"></div>
+    <div class="title-glow g1"></div>
+    <div class="title-glow g2"></div>
+    <div class="title-scan"></div>
+
+    <header class="title-top">
+      <span>OMG//NEW ERIDU</span>
+      <span class="tt-right">HOLLOW TACTICAL SIM <b>v1.0</b></span>
+    </header>
+
+    <div class="title-agents" id="title-agents" aria-hidden="true"></div>
+
+    <main class="title-main">
+      <div class="title-badge"><i></i> HOLLOW TACTICAL SIMULATION</div>
+      <h1 class="title-logo">
+        <span class="tl-zero">ZERO</span><span class="tl-slash">//</span><span class="tl-chess">CHESS</span>
+      </h1>
+      <p class="title-kr">제로 오토체스</p>
+      <p class="title-desc">
+        뉴에리두의 요원들을 소환하라.<br />
+        진영과 역할 시너지를 조합하고, 12개의 홀로우 웨이브를 돌파하십시오.
+      </p>
+
+      <div class="title-feats">
+        <div><b>28</b><span>요원</span></div>
+        <div><b>7</b><span>진영</span></div>
+        <div><b>12</b><span>웨이브</span></div>
+        <div><b>3★</b><span>각성</span></div>
+      </div>
+
+      <div class="title-cta">
+        <button id="btn-start" class="btn btn-hero">작전 개시 <span>▶</span></button>
+        <button id="btn-title-help" class="btn btn-ghost">게임 방법</button>
+      </div>
+
+      <p class="title-foot">탭 또는 클릭으로 요원을 배치하세요 · 모바일 지원<br /><span class="fan-credit">FAN PROJECT · ART © HoYoverse / ZZZ WIKI</span></p>
+    </main>
+  </section>
+
+  <!-- ================= GAME ================= -->
+  <section id="game" class="game hidden">
+    <header class="hud">
+      <div class="brand">
+        <span class="brand-mark">Z<span>//</span>C</span>
+        <div class="brand-txt"><b>ZERO CHESS</b><small>HOLLOW TACTICAL SIM</small></div>
+      </div>
+
+      <div class="hud-stats">
+        <div class="hud-stat hp" title="생명력">
+          <span class="hs-icon">♥</span>
+          <div><small>LIFE</small><b id="hud-hp">100</b></div>
+        </div>
+        <div class="hud-stat gold" title="골드">
+          <span class="hs-icon">◈</span>
+          <div><small>GOLD</small><b id="hud-gold">6</b></div>
+        </div>
+        <div class="hud-stat lvl" title="레벨 = 배치 가능 수">
+          <span class="hs-icon">▲</span>
+          <div><small>LEVEL</small><b id="hud-level">3</b></div>
+          <div class="xp-track"><i id="hud-xp"></i></div>
+        </div>
+        <div class="hud-stat streak" title="연승/연패">
+          <span class="hs-icon" id="hud-streak-icon">✦</span>
+          <div><small>STREAK</small><b id="hud-streak">0</b></div>
+        </div>
+      </div>
+
+      <div class="hud-actions">
+        <button id="btn-sound" class="icon-btn" title="사운드" aria-label="사운드">♪</button>
+        <button id="btn-help" class="icon-btn" title="게임 방법" aria-label="게임 방법">?</button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <aside class="panel panel-left">
+        <div class="panel-head"><h3>시너지</h3><span class="panel-count" id="syn-count">0</span></div>
+        <div id="synergy-list" class="synergy-list"></div>
+        <div class="panel-tip">같은 진영·역할 2명부터 발동</div>
+      </aside>
+
+      <main class="board-col">
+        <div class="round-bar">
+          <div class="stage-chip">
+            <span class="sc-stage" id="hud-stage">1-1</span>
+            <span class="sc-name" id="hud-wave">에테리얼 정찰대</span>
+          </div>
+          <div class="timer-wrap">
+            <span class="timer-label" id="timer-label">배치</span>
+            <span class="timer" id="hud-timer">35</span>
+          </div>
+          <div class="round-actions">
+            <div class="speed-group" id="speed-group">
+              <button class="spd" data-speed="1">×1</button>
+              <button class="spd" data-speed="2">×2</button>
+              <button class="spd" data-speed="3">×3</button>
+            </div>
+            <button id="btn-battle" class="btn btn-primary">전투 시작</button>
+          </div>
+        </div>
+
+        <div class="board-shell" id="board-shell">
+          <div class="board" id="board" aria-label="전장"></div>
+          <div class="fx-layer" id="fx-layer"></div>
+          <div class="unit-layer" id="unit-layer"></div>
+          <div class="zone-label zone-enemy">ENEMY ZONE</div>
+          <div class="zone-label zone-player">DEPLOY ZONE</div>
+        </div>
+
+        <div class="bench-bar">
+          <div class="bench-label">벤치 <span id="bench-count">0/8</span></div>
+          <div class="bench" id="bench"></div>
+          <div class="board-cap">배치 <b id="board-cap">0/3</b></div>
+        </div>
+      </main>
+
+      <aside class="panel panel-right">
+        <div class="panel-head"><h3>작전 정보</h3><span class="panel-count" id="round-badge">01</span></div>
+        <div class="next-wave" id="next-wave"></div>
+        <div class="detail" id="detail"></div>
+        <div class="log-head"><span>전투 로그</span><button id="btn-clear-log" class="log-clear">비우기</button></div>
+        <div class="combat-log" id="combat-log"></div>
+      </aside>
+    </div>
+
+    <footer class="shop">
+      <div class="shop-controls">
+        <div class="shop-title">상점 <span id="shop-lock-label"></span></div>
+        <button id="btn-reroll" class="btn btn-shop">새로고침 <b>2G</b></button>
+        <button id="btn-xp" class="btn btn-shop">경험치 <b>4G</b></button>
+        <button id="btn-lock" class="btn btn-shop btn-lock">잠금 <b>OFF</b></button>
+      </div>
+      <div class="shop-cards" id="shop-cards"></div>
+    </footer>
+  </section>
+
+  <!-- ================= MOBILE SELECT BAR ================= -->
+  <div class="sel-bar hidden" id="sel-bar">
+    <div class="sb-face" id="sb-face">앤</div>
+    <div class="sb-info"><b id="sb-name">앤비</b><small id="sb-sub">교활한 토끼들 · 강타</small></div>
+    <button id="sb-sell" class="btn btn-sell">판매 <b id="sb-price">1G</b></button>
+    <button id="sb-close" class="sb-close" aria-label="닫기">✕</button>
+  </div>
+
+  <!-- ================= ROUND BANNER ================= -->
+  <div class="round-banner hidden" id="round-banner">
+    <div class="rb-inner" id="rb-inner">
+      <div class="rb-kicker" id="rb-kicker">ROUND 01</div>
+      <h2 class="rb-title" id="rb-title">VICTORY</h2>
+      <div class="rb-lines" id="rb-lines"></div>
+      <button id="rb-continue" class="btn btn-primary">계속 <span id="rb-count">3</span></button>
+    </div>
+  </div>
+
+  <!-- ================= END SCREEN ================= -->
+  <div class="end-screen hidden" id="end-screen">
+    <div class="end-card">
+      <div class="rb-kicker" id="end-kicker">MISSION REPORT</div>
+      <h2 class="rb-title" id="end-title">작전 성공</h2>
+      <p class="end-sub" id="end-sub">홀로우를 모두 정화했습니다.</p>
+      <div class="end-stats" id="end-stats"></div>
+      <div class="end-actions">
+        <button id="btn-restart" class="btn btn-hero">다시 도전</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HELP ================= -->
+  <div class="modal hidden" id="help-modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>작전 매뉴얼</h2>
+        <button id="btn-help-close" class="sb-close" aria-label="닫기">✕</button>
+      </div>
+      <div class="modal-body">
+        <section>
+          <h3>1. 요원 배치</h3>
+          <p>상점에서 요원을 구매하면 벤치에 들어옵니다. 벤치 요원을 <b>탭한 뒤 아래쪽 4줄</b>을 탭해 배치하세요. 드래그도 지원합니다.</p>
+          <p>배치 가능 수는 <b>레벨과 같습니다</b>. 같은 요원 3개를 모으면 자동으로 <b>★각성</b>하며 능력치가 크게 오릅니다.</p>
+        </section>
+        <section>
+          <h3>2. 시너지</h3>
+          <p>같은 <b>진영</b> 또는 <b>역할</b> 요원을 2명 이상 배치하면 시너지가 발동합니다. 왼쪽 패널에서 발동 상태와 다음 단계를 확인하세요.</p>
+        </section>
+        <section>
+          <h3>3. 경제</h3>
+          <p>매 라운드 기본 수입 5골드에 <b>이자(보유 골드 10% 최대 5)</b>와 <b>연승/연패 보너스</b>가 붙습니다. 2골드로 상점 새로고침, 4골드로 경험치를 살 수 있습니다.</p>
+        </section>
+        <section>
+          <h3>4. 전투</h3>
+          <p>전투는 자동으로 진행됩니다. 요원은 마나가 가득 차면 스킬을 사용합니다. 모든 적을 처치하면 승리하며, 패배하면 생명력이 감소합니다.</p>
+          <p>생명력이 0이 되면 작전 실패. <b>12번째 웨이브</b>를 돌파하면 작전 성공입니다.</p>
+        </section>
+        <section>
+          <h3>5. 팁</h3>
+          <p>· 상점 잠금을 활용해 원하는 요원을 다음 라운드까지 남겨두세요.<br />
+             · 3★ 요원 하나가 1★ 여러 명보다 강할 수 있습니다.<br />
+             · 보스 라운드 전에는 골드를 써서 전력을 정비하세요.</p>
+        </section>
+        <section>
+          <h3>크레딧</h3>
+          <p>비공식 팬 프로젝트입니다. 캐릭터 및 이미지 저작권은 <b>HoYoverse</b>에 있으며, 초상화는 <b>Zenless Zone Zero Wiki (Fandom)</b>에서 제공됩니다. 상업적 이용을 목적으로 하지 않습니다.</p>
+        </section>
+      </div>
+      <div class="modal-foot"><button id="btn-help-ok" class="btn btn-primary">확인</button></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="ghost" class="ghost hidden"></div>
+  <div id="screen-flash" class="screen-flash"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
