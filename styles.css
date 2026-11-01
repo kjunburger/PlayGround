@@ -509,6 +509,8 @@ button { font-family: inherit; }
   border-right: 1px solid rgba(255, 255, 255, 0.035);
   border-bottom: 1px solid rgba(255, 255, 255, 0.035);
   overflow: hidden;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 .cell.alt { background: rgba(255, 255, 255, 0.018); }
 .cell.player { background: rgba(84, 230, 255, 0.032); }
@@ -1143,9 +1145,9 @@ button { font-family: inherit; }
   .board-cap { font-size: 7px; }
 
   .shop {
-    position: sticky;
-    bottom: 0;
-    z-index: 40;
+    position: relative;
+    bottom: auto;
+    z-index: 20;
     height: auto;
     grid-template-columns: 1fr;
     gap: 5px;
@@ -1180,9 +1182,9 @@ button { font-family: inherit; }
   .sc-top { padding: 3px 5px 0; }
   .sc-portrait { margin: 3px 5px; min-height: 30px; }
   .sc-bottom { padding: 0 5px 4px; }
-  .sel-bar { display: flex; bottom: calc(178px + var(--safe-b)); }
+  .sel-bar { display: flex; bottom: calc(10px + var(--safe-b)); }
   .sel-bar.hidden { display: none !important; }
-  .toast { bottom: calc(215px + var(--safe-b)); }
+  .toast { bottom: calc(78px + var(--safe-b)); }
   .zone-label { font-size: 5.5px; }
   .unit .u-name { font-size: calc(var(--cell) * 0.17); }
 }

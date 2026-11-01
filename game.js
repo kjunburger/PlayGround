@@ -520,7 +520,11 @@
         if (d.moved && drop && ev) {
           handleDrop(d, ev.clientX, ev.clientY);
         } else if (!d.moved) {
-          selectUnit(d.unit, d.from, d.idx);
+          if (state.sel && state.sel.unit !== d.unit) {
+            placeUnit(state.sel.from, state.sel.idx, d.from, d.idx);
+          } else {
+            selectUnit(d.unit, d.from, d.idx);
+          }
         } else {
           markValidCells(!!state.sel);
         }
